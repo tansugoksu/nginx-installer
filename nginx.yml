@@ -1,0 +1,34 @@
+---
+
+- hosts: myhost
+  gather_facts: False
+
+  pre_tasks:
+
+  - name: Install python2
+    raw: sudo apt-get -y install python-simplejson
+
+  tasks:
+
+  - name: Install nginx from repo
+    apt: 
+      name: nginx
+      state: latest
+      update_cache: yes
+    become: true
+
+  - name: Update nginx default
+    template: src=default.j2 dest=/etc/nginx/sites-available/default
+    become: true
+
+  - name: Update index page
+    template: src=index.html.j2 dest=/var/www/html/index.html
+    become: true
+    notify:
+    - restart nginx
+
+  handlers:
+
+  - name: restart nginx
+    service: name=nginx state=restarted
+    become: true

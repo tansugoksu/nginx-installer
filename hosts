@@ -1,0 +1,2 @@
+[myhost]
+myhost ansible_ssh_host=myhost.tansugoksu.com
